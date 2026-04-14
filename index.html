@@ -46,12 +46,11 @@
 
 html, body {
     height: 100%;
-    overflow-x: hidden;
-}
-
-html {
-    scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    touch-action: none;
+    overscroll-behavior: none;
 }
 
 body {
@@ -61,12 +60,19 @@ body {
     line-height: 1.45;
 }
 
+/* Kontener przewijania - transform zamiast scroll-snap (pewny na mobile) */
+.slides-wrap {
+    position: fixed;
+    inset: 0;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+}
+
 .slide {
     width: 100vw;
     height: 100vh;
     height: 100dvh;
     overflow: hidden;
-    scroll-snap-align: start;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -593,6 +599,9 @@ body {
 <button class="mobile-nav prev" id="mPrev" aria-label="Poprzedni slajd">‹</button>
 <button class="mobile-nav next" id="mNext" aria-label="Następny slajd">›</button>
 
+<!-- Kontener slajdów - transform przełącza między nimi -->
+<div class="slides-wrap" id="slidesWrap">
+
 <!-- ===========================================
      SLAJD 1: TYTUŁ
      =========================================== -->
@@ -921,6 +930,8 @@ body {
     </div>
 </section>
 
+</div><!-- /.slides-wrap -->
+
 <script>
 /* ===========================================
    KONTROLER PREZENTACJI
@@ -930,21 +941,23 @@ body {
    =========================================== */
 class PrezentacjaProcam {
     constructor() {
+        this.wrap = document.getElementById('slidesWrap');
         this.slides = Array.from(document.querySelectorAll('.slide'));
         this.currentIndex = 0;
         this.progress = document.getElementById('progress');
         this.navContainer = document.getElementById('navDots');
         this.touchStartY = 0;
+        this.touchStartX = 0;
+        this.wheelLock = false;
 
         this.buildNavDots();
-        this.setupObserver();
         this.bindKeyboard();
         this.bindTouch();
         this.bindMobileNav();
-        this.updateProgress();
+        this.bindWheel();
+        this.goTo(0, true);
     }
 
-    // Tworzenie kropek nawigacji
     buildNavDots() {
         this.slides.forEach((slide, i) => {
             const dot = document.createElement('button');
@@ -954,47 +967,36 @@ class PrezentacjaProcam {
             this.navContainer.appendChild(dot);
         });
         this.dots = Array.from(this.navContainer.querySelectorAll('.nav-dot'));
-        if (this.dots[0]) this.dots[0].classList.add('active');
     }
 
-    // Obserwator wejścia slajdów do viewport - wyzwala animacje
-    setupObserver() {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
-                    entry.target.classList.add('visible');
-                    const idx = this.slides.indexOf(entry.target);
-                    if (idx !== -1) {
-                        this.currentIndex = idx;
-                        this.updateDots();
-                        this.updateProgress();
-                    }
-                }
-            });
-        }, { threshold: [0.5] });
-        this.slides.forEach(s => observer.observe(s));
-    }
-
-    // Aktualizacja kropek
     updateDots() {
         this.dots.forEach((d, i) => d.classList.toggle('active', i === this.currentIndex));
     }
 
-    // Pasek postępu
     updateProgress() {
         const pct = ((this.currentIndex + 1) / this.slides.length) * 100;
         this.progress.style.width = pct + '%';
     }
 
-    // Nawigacja
-    goTo(index) {
+    // Przełączenie slajdu przez transform - niezawodne na mobile
+    goTo(index, instant = false) {
         if (index < 0 || index >= this.slides.length) return;
-        this.slides[index].scrollIntoView({ behavior: 'smooth' });
+        this.currentIndex = index;
+        if (instant) this.wrap.style.transition = 'none';
+        this.wrap.style.transform = `translateY(-${index * 100}%)`;
+        if (instant) {
+            requestAnimationFrame(() => {
+                this.wrap.style.transition = '';
+            });
+        }
+        // Klasa .visible dla animacji reveal w bieżącym slajdzie
+        this.slides.forEach((s, i) => s.classList.toggle('visible', i === index));
+        this.updateDots();
+        this.updateProgress();
     }
     next() { this.goTo(this.currentIndex + 1); }
     prev() { this.goTo(this.currentIndex - 1); }
 
-    // Klawisze
     bindKeyboard() {
         document.addEventListener('keydown', (e) => {
             if (['ArrowDown', 'ArrowRight', ' ', 'PageDown'].includes(e.key)) {
@@ -1009,30 +1011,37 @@ class PrezentacjaProcam {
         });
     }
 
-    // Touch - swipe pionowy (scroll-snap sam obsługuje, tu tylko fallback)
+    // Touch - swipe pionowy lub poziomy
     bindTouch() {
         document.addEventListener('touchstart', (e) => {
             this.touchStartY = e.touches[0].clientY;
+            this.touchStartX = e.touches[0].clientX;
         }, { passive: true });
         document.addEventListener('touchend', (e) => {
-            const diff = this.touchStartY - e.changedTouches[0].clientY;
-            if (Math.abs(diff) > 60) { diff > 0 ? this.next() : this.prev(); }
+            const dy = this.touchStartY - e.changedTouches[0].clientY;
+            const dx = this.touchStartX - e.changedTouches[0].clientX;
+            const diff = Math.abs(dy) > Math.abs(dx) ? dy : dx;
+            if (Math.abs(diff) > 40) { diff > 0 ? this.next() : this.prev(); }
         }, { passive: true });
     }
 
-    // Przyciski mobile + tap na krawędzie ekranu
+    // Scroll kółkiem myszy
+    bindWheel() {
+        document.addEventListener('wheel', (e) => {
+            if (this.wheelLock) return;
+            this.wheelLock = true;
+            setTimeout(() => this.wheelLock = false, 700);
+            e.deltaY > 0 ? this.next() : this.prev();
+        }, { passive: true });
+    }
+
     bindMobileNav() {
         document.getElementById('mPrev').addEventListener('click', () => this.prev());
         document.getElementById('mNext').addEventListener('click', () => this.next());
     }
 }
 
-// Start
 document.addEventListener('DOMContentLoaded', () => new PrezentacjaProcam());
-// Pierwsze wyzwolenie animacji na pierwszym slajdzie
-window.addEventListener('load', () => {
-    document.querySelector('.slide').classList.add('visible');
-});
 </script>
 </body>
 </html>
