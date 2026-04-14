@@ -515,20 +515,24 @@ body {
     line-height: 1;
     cursor: pointer;
     z-index: 100;
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 20px rgba(0,0,0,0.4);
     font-family: var(--font-display);
     -webkit-tap-highlight-color: transparent;
+    opacity: 0.9;
 }
-.mobile-nav:active { transform: translateY(-50%) scale(0.92); background: var(--accent-bright); }
+.mobile-nav:active, .mobile-nav:hover {
+    transform: translateY(-50%) scale(0.95);
+    background: var(--accent-bright);
+    opacity: 1;
+}
 .mobile-nav.prev { left: 12px; }
 .mobile-nav.next { right: 12px; }
 
-/* Pokaż na urządzeniach dotykowych lub wąskich ekranach */
-@media (hover: none), (max-width: 900px) {
-    .mobile-nav { display: flex; }
+/* Na telefonie chowamy podpowiedź klawiszy */
+@media (max-width: 900px) {
     .keyboard-hint { display: none; }
 }
 
