@@ -497,6 +497,42 @@ body {
 }
 
 /* ===========================================
+   MOBILE NAV - duże przyciski na bok ekranu
+   widoczne tylko na dotyku / wąskich ekranach
+   =========================================== */
+.mobile-nav {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(141,198,63,0.9);
+    color: #0f1a10;
+    border: none;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    font-family: var(--font-display);
+    -webkit-tap-highlight-color: transparent;
+}
+.mobile-nav:active { transform: translateY(-50%) scale(0.92); background: var(--accent-bright); }
+.mobile-nav.prev { left: 12px; }
+.mobile-nav.next { right: 12px; }
+
+/* Pokaż na urządzeniach dotykowych lub wąskich ekranach */
+@media (hover: none), (max-width: 900px) {
+    .mobile-nav { display: flex; }
+    .keyboard-hint { display: none; }
+}
+
+/* ===========================================
    RESPONSIVE - aggressywne skalowanie dla małych ekranów
    =========================================== */
 @media (max-height: 700px) {
@@ -546,8 +582,12 @@ body {
 <!-- Kropki nawigacji -->
 <nav class="nav-dots" id="navDots" aria-label="Nawigacja slajdów"></nav>
 
-<!-- Podpowiedź klawiszy -->
+<!-- Podpowiedź klawiszy (desktop) -->
 <div class="keyboard-hint">← → spacja</div>
+
+<!-- Przyciski nawigacji dla mobile -->
+<button class="mobile-nav prev" id="mPrev" aria-label="Poprzedni slajd">‹</button>
+<button class="mobile-nav next" id="mNext" aria-label="Następny slajd">›</button>
 
 <!-- ===========================================
      SLAJD 1: TYTUŁ
@@ -896,6 +936,7 @@ class PrezentacjaProcam {
         this.setupObserver();
         this.bindKeyboard();
         this.bindTouch();
+        this.bindMobileNav();
         this.updateProgress();
     }
 
@@ -964,7 +1005,7 @@ class PrezentacjaProcam {
         });
     }
 
-    // Touch - swipe pionowy
+    // Touch - swipe pionowy (scroll-snap sam obsługuje, tu tylko fallback)
     bindTouch() {
         document.addEventListener('touchstart', (e) => {
             this.touchStartY = e.touches[0].clientY;
@@ -973,6 +1014,12 @@ class PrezentacjaProcam {
             const diff = this.touchStartY - e.changedTouches[0].clientY;
             if (Math.abs(diff) > 60) { diff > 0 ? this.next() : this.prev(); }
         }, { passive: true });
+    }
+
+    // Przyciski mobile + tap na krawędzie ekranu
+    bindMobileNav() {
+        document.getElementById('mPrev').addEventListener('click', () => this.prev());
+        document.getElementById('mNext').addEventListener('click', () => this.next());
     }
 }
 
