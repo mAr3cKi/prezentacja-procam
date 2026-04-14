@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nawożenie hybrydowe PROCAM - Must Have. Must Know. Must Use.</title>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&f[]=satoshi@400,500,700,900&display=swap">
+<style>
+/* ===========================================
+   ZMIENNE MOTYWU - kolory PROCAM (zieleń brand)
+   =========================================== */
+:root {
+    --bg-primary: #0f1a10;
+    --bg-secondary: #162318;
+    --text-primary: #ffffff;
+    --text-dim: #a8b5a9;
+    --accent: #8dc63f;            /* zielony PROCAM */
+    --accent-bright: #b4e051;
+    --accent-glow: rgba(141,198,63,0.35);
+    --alert: #ff3b3b;              /* czerwony - dramatyczne liczby */
+    --warn: #ffd84d;
+    --gray-line: rgba(255,255,255,0.08);
+
+    --font-display: 'Clash Display', sans-serif;
+    --font-body: 'Satoshi', sans-serif;
+
+    --title-size: clamp(1.8rem, 5.5vw, 4.5rem);
+    --h2-size: clamp(1.3rem, 3.2vw, 2.4rem);
+    --h3-size: clamp(1rem, 2vw, 1.5rem);
+    --body-size: clamp(0.78rem, 1.2vw, 1.05rem);
+    --small-size: clamp(0.68rem, 0.95vw, 0.85rem);
+    --huge-size: clamp(2.5rem, 8vw, 6rem);
+
+    --slide-padding: clamp(1.2rem, 3.5vw, 3.5rem);
+    --content-gap: clamp(0.6rem, 1.8vw, 1.6rem);
+    --element-gap: clamp(0.3rem, 0.9vw, 0.8rem);
+
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --dur: 0.7s;
+}
+
+/* ===========================================
+   BASE + VIEWPORT LOCK
+   =========================================== */
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+    height: 100%;
+    overflow-x: hidden;
+}
+
+html {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.45;
+}
+
+.slide {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    padding: var(--slide-padding);
+}
+
+/* Tło z delikatnym gradientem siatki dla efektu głębi */
+.slide::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse at 15% 20%, rgba(141,198,63,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 80%, rgba(141,198,63,0.04) 0%, transparent 55%),
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px) 0 0/50px 50px,
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px) 0 0/50px 50px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.slide > * { position: relative; z-index: 1; }
+
+.slide-content {
+    max-width: min(1400px, 95vw);
+    width: 100%;
+    margin: 0 auto;
+    max-height: 100%;
+    overflow: hidden;
+}
+
+/* Numer slajdu + marka w rogu */
+.slide-meta {
+    position: absolute;
+    bottom: clamp(0.8rem, 2vw, 1.6rem);
+    left: var(--slide-padding);
+    right: var(--slide-padding);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-body);
+    font-size: var(--small-size);
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    z-index: 2;
+}
+.slide-meta .brand { color: var(--accent); font-weight: 700; }
+
+/* ===========================================
+   ANIMACJE - reveal przy wejściu slajdu do viewport
+   =========================================== */
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity var(--dur) var(--ease),
+                transform var(--dur) var(--ease);
+}
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+
+.reveal:nth-child(1) { transition-delay: 0.05s; }
+.reveal:nth-child(2) { transition-delay: 0.18s; }
+.reveal:nth-child(3) { transition-delay: 0.31s; }
+.reveal:nth-child(4) { transition-delay: 0.44s; }
+.reveal:nth-child(5) { transition-delay: 0.57s; }
+.reveal:nth-child(6) { transition-delay: 0.70s; }
+
+/* ===========================================
+   SLAJD 1 - TYTUŁ (Must Have / Must Know / Must Use)
+   =========================================== */
+.title-slide {
+    background: radial-gradient(circle at 50% 50%, #1a2e1c 0%, var(--bg-primary) 80%);
+}
+.title-slide .slide-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: var(--content-gap);
+}
+.eyebrow {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: var(--small-size);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 0.4em 1em;
+    border: 1px solid var(--accent);
+    border-radius: 99px;
+}
+.mega-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--huge-size);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+}
+.mega-title span {
+    display: block;
+    color: var(--accent);
+    font-style: italic;
+}
+.mega-title span:nth-of-type(2) { color: var(--accent-bright); opacity: 0.85; }
+.mega-title span:nth-of-type(3) { color: var(--text-primary); }
+
+.title-sub {
+    font-size: var(--h3-size);
+    color: var(--text-dim);
+    max-width: 60ch;
+}
+.title-cta {
+    margin-top: var(--content-gap);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--h2-size);
+    color: var(--text-primary);
+}
+.title-cta strong { color: var(--accent-bright); }
+
+/* ===========================================
+   SLAJDY Z LICZBAMI - wielkie statystyki
+   =========================================== */
+.slide-heading {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--h2-size);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--content-gap);
+}
+.slide-heading .accent { color: var(--accent); }
+.slide-heading .alert { color: var(--alert); }
+
+.kicker {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: var(--small-size);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6em;
+}
+
+/* Karta statystyki */
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    gap: clamp(0.6rem, 1.5vw, 1.2rem);
+}
+.stat-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--gray-line);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: clamp(0.9rem, 2vw, 1.5rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+}
+.stat-card .val {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.8rem, 4.5vw, 3.2rem);
+    line-height: 1;
+    color: var(--accent-bright);
+    letter-spacing: -0.02em;
+}
+.stat-card .val.alert { color: var(--alert); }
+.stat-card .val.warn { color: var(--warn); }
+.stat-card .lbl {
+    font-size: var(--body-size);
+    color: var(--text-dim);
+}
+.stat-card .lbl strong { color: var(--text-primary); }
+
+/* Tabela porównawcza */
+.compare {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: clamp(0.8rem, 2.5vw, 2rem);
+    align-items: stretch;
+}
+.compare .vs {
+    align-self: center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: var(--accent);
+}
+.compare-col {
+    background: var(--bg-secondary);
+    border: 1px solid var(--gray-line);
+    border-radius: 10px;
+    padding: clamp(1rem, 2.2vw, 1.8rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+.compare-col.winner {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent), 0 20px 60px -20px var(--accent-glow);
+    background: linear-gradient(180deg, rgba(141,198,63,0.08), rgba(141,198,63,0.02));
+}
+.compare-col.loser { opacity: 0.7; }
+.compare-col .name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--h3-size);
+    color: var(--text-primary);
+}
+.compare-col .dose {
+    font-size: var(--body-size);
+    color: var(--text-dim);
+}
+.compare-col .price {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+    line-height: 1;
+    margin-top: 0.3em;
+}
+.compare-col.winner .price { color: var(--accent-bright); }
+.compare-col.loser .price { color: var(--alert); text-decoration: line-through; text-decoration-thickness: 2px; }
+.compare-col .extra {
+    font-size: var(--small-size);
+    color: var(--text-dim);
+    margin-top: 0.4em;
+    border-top: 1px solid var(--gray-line);
+    padding-top: 0.5em;
+}
+.compare-col .badge {
+    display: inline-block;
+    align-self: flex-start;
+    font-size: var(--small-size);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3em 0.8em;
+    border-radius: 99px;
+}
+.compare-col.winner .badge { background: var(--accent); color: #0f1a10; }
+.compare-col.loser .badge { background: rgba(255,59,59,0.2); color: var(--alert); }
+
+/* Ogromna liczba "hero" */
+.hero-number {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(4rem, 14vw, 10rem);
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+    color: var(--accent);
+}
+.hero-number.alert { color: var(--alert); }
+.hero-number .unit {
+    font-size: 0.35em;
+    color: var(--text-dim);
+    font-weight: 500;
+    letter-spacing: 0;
+    margin-left: 0.2em;
+    vertical-align: 0.4em;
+}
+
+/* Dwukolumnowy layout */
+.two-col {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: clamp(1rem, 3vw, 2.5rem);
+    align-items: center;
+}
+@media (max-width: 900px) {
+    .two-col { grid-template-columns: 1fr; }
+    .compare { grid-template-columns: 1fr; }
+    .compare .vs { transform: rotate(90deg); margin: 0 auto; }
+}
+
+/* Lista kulek z akcentem */
+.feature-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1.2vh, 1rem);
+}
+.feature-list li {
+    font-size: var(--body-size);
+    padding-left: 1.8em;
+    position: relative;
+    color: var(--text-primary);
+}
+.feature-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 1em;
+    height: 2px;
+    background: var(--accent);
+}
+.feature-list li strong { color: var(--accent-bright); }
+
+/* Matura - dwie uprawy */
+.matura-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1rem, 2.5vw, 2rem);
+}
+.matura-crop {
+    background: var(--bg-secondary);
+    border: 1px solid var(--gray-line);
+    border-top: 3px solid var(--accent);
+    border-radius: 10px;
+    padding: clamp(1rem, 2.2vw, 1.6rem);
+}
+.matura-crop .crop-name {
+    font-family: var(--font-display);
+    font-size: var(--h3-size);
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 0.6em;
+}
+.matura-crop .crop-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.45em 0;
+    border-bottom: 1px solid var(--gray-line);
+    font-size: var(--body-size);
+}
+.matura-crop .crop-row:last-child { border-bottom: none; }
+.matura-crop .crop-row .v {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: calc(var(--body-size) * 1.3);
+}
+.matura-crop .crop-row .v.good { color: var(--accent-bright); }
+.matura-crop .crop-row .v.bad { color: var(--alert); }
+
+.disclaimer {
+    margin-top: var(--content-gap);
+    padding: clamp(0.7rem, 1.5vw, 1.2rem);
+    background: rgba(141,198,63,0.08);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    font-size: var(--body-size);
+}
+.disclaimer strong { color: var(--accent-bright); }
+
+/* SUKCES slide */
+.final-slide {
+    background: radial-gradient(circle at 50% 50%, #1c3020 0%, var(--bg-primary) 80%);
+    text-align: center;
+    align-items: center;
+}
+.final-slide .slide-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--content-gap);
+    text-align: center;
+}
+.formula {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.4rem, 3.5vw, 2.8rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+.formula .plus { color: var(--accent); margin: 0 0.3em; }
+.formula .equals {
+    display: block;
+    font-size: clamp(3rem, 9vw, 7rem);
+    color: var(--accent-bright);
+    font-style: italic;
+    margin-top: 0.2em;
+}
+
+/* ===========================================
+   NAWIGACJA - kropki + progress bar
+   =========================================== */
+.progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: var(--accent);
+    z-index: 100;
+    transition: width 0.2s linear;
+}
+
+.nav-dots {
+    position: fixed;
+    right: clamp(0.8rem, 2vw, 1.5rem);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 0.7em;
+    z-index: 50;
+}
+.nav-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1.5px solid var(--text-dim);
+    cursor: pointer;
+    transition: all 0.3s var(--ease);
+    padding: 0;
+}
+.nav-dot:hover { border-color: var(--accent); }
+.nav-dot.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: scale(1.3);
+    box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.keyboard-hint {
+    position: fixed;
+    bottom: clamp(0.6rem, 1.5vw, 1rem);
+    right: clamp(0.8rem, 2vw, 1.5rem);
+    font-size: var(--small-size);
+    color: var(--text-dim);
+    z-index: 50;
+    opacity: 0.6;
+}
+
+/* ===========================================
+   RESPONSIVE - aggressywne skalowanie dla małych ekranów
+   =========================================== */
+@media (max-height: 700px) {
+    :root {
+        --slide-padding: clamp(0.9rem, 2.8vw, 2.5rem);
+        --content-gap: clamp(0.5rem, 1.3vw, 1rem);
+        --title-size: clamp(1.4rem, 4.5vw, 3rem);
+        --h2-size: clamp(1.1rem, 2.8vw, 2rem);
+    }
+}
+@media (max-height: 600px) {
+    :root {
+        --slide-padding: clamp(0.6rem, 2.2vw, 1.8rem);
+        --huge-size: clamp(2rem, 6vw, 4rem);
+        --h2-size: clamp(1rem, 2.5vw, 1.6rem);
+        --body-size: clamp(0.72rem, 1.1vw, 0.9rem);
+    }
+    .nav-dots, .keyboard-hint { display: none; }
+    .slide-meta { display: none; }
+}
+@media (max-height: 500px) {
+    :root {
+        --huge-size: clamp(1.6rem, 5vw, 3rem);
+        --title-size: clamp(1.1rem, 3.8vw, 2rem);
+    }
+}
+@media (max-width: 600px) {
+    .matura-grid { grid-template-columns: 1fr; }
+    .nav-dots { display: none; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+    }
+    html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- Pasek postępu -->
+<div class="progress-bar" id="progress"></div>
+
+<!-- Kropki nawigacji -->
+<nav class="nav-dots" id="navDots" aria-label="Nawigacja slajdów"></nav>
+
+<!-- Podpowiedź klawiszy -->
+<div class="keyboard-hint">← → spacja</div>
+
+<!-- ===========================================
+     SLAJD 1: TYTUŁ
+     =========================================== -->
+<section class="slide title-slide" data-title="Must Have">
+    <div class="slide-content">
+        <span class="eyebrow reveal">PROCAM · Nawożenie hybrydowe 2026</span>
+        <h1 class="mega-title reveal">
+            <span>Must Have.</span>
+            <span>Must Know.</span>
+            <span>Must Use.</span>
+        </h1>
+        <p class="title-sub reveal">Technologia hybrydowa PROCAM - mniej nawozów mineralnych, więcej plonu. Sprawdzona na <strong style="color:var(--accent-bright)">8 500 ha</strong> w sezonie 2025.</p>
+        <p class="title-cta reveal">W sezonie nie ma czasu na teorię. <strong>Są tylko liczby.</strong></p>
+    </div>
+    <div class="slide-meta">
+        <span class="brand">PROCAM · Agronomia Sukcesu</span>
+        <span>01 / 09</span>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLAJD 2: MATURA 2025 - dowód na polu
+     =========================================== -->
+<section class="slide" data-title="Matura 2025">
+    <div class="slide-content">
+        <p class="kicker reveal">Matura 2025 · Analiza produkcyjna</p>
+        <h2 class="slide-heading reveal">
+            <span class="accent">8 500 ha</span> pod technologią hybrydową.<br>
+            Efekt: <span class="accent">niższe koszty, wyższe plony.</span>
+        </h2>
+
+        <div class="matura-grid reveal">
+            <div class="matura-crop">
+                <div class="crop-name">Rzepak ozimy (96 pól · 40 ha śr.)</div>
+                <div class="crop-row"><span>Koszt uprawy</span><span class="v good">-8% r/r</span></div>
+                <div class="crop-row"><span>Koszt nawożenia</span><span class="v good">-10%</span></div>
+                <div class="crop-row"><span>Średni plon</span><span class="v good">+2% (3,81 t/ha)</span></div>
+                <div class="crop-row"><span>Koszt całkowity</span><span class="v">5 505 zł/ha</span></div>
+            </div>
+            <div class="matura-crop">
+                <div class="crop-name">Pszenica ozima (92 pola · 50 ha śr.)</div>
+                <div class="crop-row"><span>Koszt uprawy</span><span class="v good">-8% r/r</span></div>
+                <div class="crop-row"><span>Koszt nawożenia</span><span class="v good">-19%</span></div>
+                <div class="crop-row"><span>Średni plon</span><span class="v good">+7% (8,52 t/ha)</span></div>
+                <div class="crop-row"><span>Koszt całkowity</span><span class="v">4 900 zł/ha</span></div>
+            </div>
+        </div>
+
+        <div class="disclaimer reveal">
+            <strong>Nawożenie mineralne + biologia</strong> = realne oszczędności <strong>bez szkody dla plonu</strong>. 70% z analizowanej powierzchni (6 000 ha) pracowało w technologii hybrydowej.
+        </div>
+    </div>
+    <div class="slide-meta">
+        <span class="brand">PROCAM</span><span>02 / 09</span>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLAJD 3: FOSFOPOWER vs DAP
+     =========================================== -->
+<section class="slide" data-title="FosfoPower vs DAP">
+    <div class="slide-content">
+        <p class="kicker reveal">Fosfor · Praktyczny wniosek</p>
+        <h2 class="slide-heading reveal">
+            Jedno opakowanie <span class="accent">FosfoPower</span> zastępuje worek <span class="alert">DAP</span>.
+        </h2>
+
+        <div class="compare reveal">
+            <div class="compare-col winner">
+                <span class="badge">Wybór agronoma</span>
+                <div class="name">FosfoPower (BioLider)</div>
+                <div class="dose">100 g / ha</div>
+                <div class="price">140 zł</div>
+                <div class="extra">
+                    Min. <strong style="color:var(--accent-bright)">40-45 kg P₂O₅/ha</strong> uwolnionego z gleby · 7 szczepów bakterii · podnosi zasobność gleby w fosfor przyswajalny
+                </div>
+            </div>
+
+            <div class="vs">vs</div>
+
+            <div class="compare-col loser">
+                <span class="badge">Konwencja</span>
+                <div class="name">DAP</div>
+                <div class="dose">170 kg / ha</div>
+                <div class="price">540 zł</div>
+                <div class="extra">
+                    Fosfor w formie mineralnej, wykorzystanie ~20% w pierwszym roku. Brak działania na pulę fosforu glebowego.
+                </div>
+            </div>
+        </div>
+
+        <p class="reveal" style="margin-top:var(--content-gap); font-size:var(--h3-size); color:var(--accent-bright); font-weight:700;">
+            3,8× taniej · PRZYBRODA 2025: <strong>+940 kg plonu kukurydzy / ha</strong>
+        </p>
+    </div>
+    <div class="slide-meta">
+        <span class="brand">PROCAM</span><span>03 / 09</span>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLAJD 4: AZOTOPOWER vs SALETRA
+     =========================================== -->
+<section class="slide" data-title="AzotoPower vs Saletra">
+    <div class="slide-content">
+        <p class="kicker reveal">Azot · Wiązanie atmosferyczne</p>
+        <h2 class="slide-heading reveal">
+            100 g <span class="accent">AzotoPower</span> = 140 kg Saletry Amonowej.
+        </h2>
+
+        <div class="compare reveal">
+            <div class="compare-col winner">
+                <span class="badge">Biologia</span>
+                <div class="name">AzotoPower</div>
+                <div class="dose">100 g / ha · 4 szczepy bakterii</div>
+                <div class="price">140 zł</div>
+                <div class="extra">
+                    Wiąże min. <strong style="color:var(--accent-bright)">30-35 kg N/ha</strong> z atmosfery. Dostarcza azot w formie NH₄⁺ przez <strong>6 miesięcy</strong>.
+                </div>
+            </div>
+
+            <div class="vs">=</div>
+
+            <div class="compare-col loser">
+                <span class="badge">Mineralnie</span>
+                <div class="name">Saletra Amonowa</div>
+                <div class="dose">140 kg / ha (wykorzystanie ~70%)</div>
+                <div class="price">240 zł</div>
+                <div class="extra">
+                    Szybkie straty, wymywanie, zmienny pobór. Ten sam efekt azotowy - przy wyższym koszcie.
+                </div>
+            </div>
+        </div>
+
+        <p class="reveal" style="margin-top:var(--content-gap); font-size:var(--h3-size); color:var(--text-primary); font-weight:600;">
+            Oszczędność <strong style="color:var(--accent-bright)">100 zł/ha</strong> i ograniczenie mineralnego N bez ryzyka plonu.
+        </p>
+    </div>
+    <div class="slide-meta">
+        <span class="brand">PROCAM</span><span>04 / 09</span>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLAJD 5: BAŁCYNY - najmocniejszy dowód
+     =========================================== -->
+<section class="slide" data-title="Bałcyny 2025">
+    <div class="slide-content">
+        <p class="kicker reveal">Doświadczenie UWM Bałcyny · Kukurydza 15.10.2025</p>
+        <h2 class="slide-heading reveal">
+            Hybryda pobiła pełne nawożenie mineralne o <span class="accent">+1 910 kg/ha</span>.
+        </h2>
+
+        <div class="stat-grid reveal">
+            <div class="stat-card">
+                <div class="val alert">14,61 t/ha</div>
+                <div class="lbl"><strong>Kontrola</strong> - Fosforan Amonu 150 kg/ha (pełne mineralne)</div>
+            </div>
+            <div class="stat-card">
+                <div class="val">15,66 t/ha</div>
+                <div class="lbl"><strong>AzotoPower + FosfoPower</strong><br>+1 050 kg/ha vs DAP</div>
+            </div>
+            <div class="stat-card">
+                <div class="val">15,89 t/ha</div>
+                <div class="lbl"><strong>Puraloop 100 + AP + FP</strong><br>+1 280 kg/ha vs DAP</div>
+            </div>
+            <div class="stat-card" style="border-left-color: var(--accent-bright); background: linear-gradient(135deg, rgba(141,198,63,0.12), rgba(141,198,63,0.03));">
+                <div class="val" style="color:var(--accent-bright)">16,52 t/ha</div>
+                <div class="lbl"><strong>Puraloop 150 + AP + FP</strong><br><span style="color:var(--accent-bright)">+1 910 kg/ha vs DAP</span></div>
+            </div>
+        </div>
+
+        <div class="disclaimer reveal">
+            <strong>Skorygowane nawożenie mineralne + biologia</strong> przyniosło lepsze efekty w plonie niż samo pełne nawożenie mineralne. Zasobność: P₂O₅ = 23,3 (bardzo wysoka), K₂O = 18 (średnia).
+        </div>
+    </div>
+    <div class="slide-meta">
+        <span class="brand">PROCAM</span><span>05 / 09</span>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLAJD 6: PORÓWNANIE PAKIETÓW PK
+     =========================================== -->
+<section class="slide" data-title="Pakiet PK">
+    <div class="slide-content">
+        <p class="kicker reveal">Porównanie pakietów nawożenia</p>
+        <h2 class="slide-heading reveal">
+            <span class="accent">430 zł</span> daje więcej niż <span class="alert">690 zł</span>.
+        </h2>
+
+        <div class="compare reveal">
+            <div class="compare-col loser">
+                <span class="badge">Mineralne</span>
+                <div class="name">ICL PK Plus 20-29</div>
+                <div class="dose">300 kg / ha</div>
+                <div class="price">690 zł</div>
+                <div class="extra">
+                    Standardowy pakiet PK. Składniki zgodnie z etykietą - bez wsparcia biologii glebowej.
+                </div>
+            </div>
+
+            <div class="vs">&lt;</div>
+
+            <div class="compare-col winner">
+                <span class="badge">Hybrydowe</span>
+                <div class="name">ICL PotashpluS 100 kg + FosfoPower 100 g + Rewital Pro⁺ 1 l</div>
+                <div class="dose">Pełny pakiet PK + biologia</div>
+                <div class="price">430 zł</div>
+                <div class="extra">
+                    Ten sam efekt PK, <strong style="color:var(--accent-bright)">plus aktywacja puli glebowej</strong>, plus resztki pożniwne pracują na Ciebie.
+                </div>
+            </div>
+        </div>
+
+        <p class="reveal" style="margin-top:var(--content-gap); font-size:var(--h3-size); color:var(--text-primary); font-weight:600; text-align:center;">
+            <strong style="color:var(--accent-bright)">260 zł/ha oszczędności</strong> · ta sama skuteczność · więcej pracy dla gleby.
+        </p>
+    </div>
+    <div class="slide-meta">
+        <span class="brand">PROCAM</span><span>06 / 09</span>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLAJD 7: HYBRYDA NA KUKURYDZY - PEŁNY PAKIET
+     =========================================== -->
+<section class="slide" data-title="Kukurydza - pakiet">
+    <div class="slide-content">
+        <p class="kicker reveal">Nawożenie hybrydowe · Kukurydza · Plan 10 t/ha</p>
+        <h2 class="slide-heading reveal">
+            Więcej składników. Większa efektywność. <span class="accent">Ten sam koszt.</span>
+        </h2>
+
+        <div class="two-col reveal">
+            <div class="matura-crop" style="border-top-color: var(--accent-bright);">
+                <div class="crop-name" style="color: var(--accent-bright);">Hybryda PROCAM</div>
+                <div class="crop-row"><span>Puraloop</span><span class="v">100 kg</span></div>
+                <div class="crop-row"><span>PotashpluS</span><span class="v">300 kg</span></div>
+                <div class="crop-row"><span>AmidaS</span><span class="v">300 kg</span></div>
+                <div class="crop-row"><span>AzotoPower</span><span class="v good">0,1 kg</span></div>
+                <div class="crop-row"><span>FosfoPower</span><span class="v good">0,1 kg</span></div>
+                <div class="crop-row" style="padding-top:0.8em; border-top:2px solid var(--accent); margin-top:0.4em;"><span>N / P₂O₅ / K₂O</span><span class="v good">170 / 85 / 111</span></div>
+                <div class="crop-row"><span>Extra</span><span class="v good" style="font-size:0.95em;">S 44 · MgO 9 · CaO 30 · Zn</span></div>
+            </div>
+
+            <div class="matura-crop" style="border-top-color: var(--alert);">
+                <div class="crop-name" style="color: var(--alert);">Tradycja mineralna</div>
+                <div class="crop-row"><span>DAP</span><span class="v">150 kg</span></div>
+                <div class="crop-row"><span>Sól potasowa</span><span class="v">200 kg</span></div>
+                <div class="crop-row"><span>Mocznik</span><span class="v">300 kg</span></div>
+                <div class="crop-row"><span>&nbsp;</span><span class="v">&nbsp;</span></div>
+                <div class="crop-row"><span>&nbsp;</span><span class="v">&nbsp;</span></div>
+                <div class="crop-row" style="padding-top:0.8em; border-top:2px solid var(--alert); margin-top:0.4em;"><span>N / P₂O₅ / K₂O</span><span class="v bad">165 / 70 / 112</span></div>
+                <div class="crop-row"><span>Extra</span><span class="v bad" style="font-size:0.95em;">brak</span></div>
+            </div>
+        </div>
+
+        <div class="disclaimer reveal">
+            <strong>Składnik pokarmowy przy udziale bakterii</strong> jest zawsze bardziej efektywny i tańszy niż z samych nawozów mineralnych.
+        </div>
+    </div>
+    <div class="slide-meta">
+        <span class="brand">PROCAM</span><span>07 / 09</span>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLAJD 8: PODSUMOWANIE - 3 korzyści
+     =========================================== -->
+<section class="slide" data-title="Dlaczego teraz">
+    <div class="slide-content">
+        <p class="kicker reveal">Dlaczego hybryda · Dlaczego teraz</p>
+        <h2 class="slide-heading reveal">
+            Trzy rzeczy, które <span class="accent">zmieniają sezon</span>.
+        </h2>
+
+        <div class="stat-grid reveal">
+            <div class="stat-card">
+                <div class="val">-19%</div>
+                <div class="lbl"><strong>Koszt nawożenia pszenicy</strong> r/r przy zastosowaniu hybrydy (Matura 2025)</div>
+            </div>
+            <div class="stat-card">
+                <div class="val">+7%</div>
+                <div class="lbl"><strong>Wyższy średni plon pszenicy</strong> mimo niższych nakładów (Matura 2025)</div>
+            </div>
+            <div class="stat-card">
+                <div class="val">3,8×</div>
+                <div class="lbl"><strong>Taniej niż DAP</strong> - FosfoPower 100 g vs DAP 170 kg</div>
+            </div>
+        </div>
+
+        <ul class="feature-list reveal" style="margin-top:var(--content-gap);">
+            <li><strong>Fosfor z gleby</strong> - FosfoPower uwalnia P z form związanych z Fe, Al i Ca. Także <strong>pod roślinę następczą</strong>.</li>
+            <li><strong>Azot z atmosfery</strong> - AzotoPower dostarcza 30-35 kg N/ha przez 6 miesięcy, w formie NH₄⁺.</li>
+            <li><strong>Analiza gleby + potrzeby pokarmowe + resztki pożniwne = optymalizacja kosztów i maksymalizacja plonów.</strong></li>
+        </ul>
+    </div>
+    <div class="slide-meta">
+        <span class="brand">PROCAM</span><span>08 / 09</span>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLAJD 9: ZAMKNIĘCIE - STRATEGIA = SUKCES
+     =========================================== -->
+<section class="slide final-slide" data-title="Sukces">
+    <div class="slide-content">
+        <span class="eyebrow reveal">Zamknięcie · Twój sezon 2026</span>
+        <p class="formula reveal">
+            Właściwa strategia <span class="plus">+</span> taktyka<br>
+            działania <span class="plus">+</span> zaangażowanie
+            <span class="equals">= SUKCES</span>
+        </p>
+        <p class="title-sub reveal" style="max-width:55ch; text-align:center;">
+            Nawożenie hybrydowe PROCAM to nie eksperyment. To sprawdzony model ekonomiczny na <strong style="color:var(--accent-bright)">8 500 hektarach</strong> - od pszenicy przez rzepak po kukurydzę.
+        </p>
+        <p class="title-cta reveal" style="text-align:center;">
+            <strong>Porozmawiaj z agronomem PROCAM.</strong><br>
+            <span style="font-size:0.7em; color:var(--text-dim); font-weight:500;">Zaplanuj nawożenie pod Twój plon docelowy jeszcze przed siewem.</span>
+        </p>
+    </div>
+    <div class="slide-meta">
+        <span class="brand">PROCAM · Agronomia Sukcesu</span>
+        <span>09 / 09</span>
+    </div>
+</section>
+
+<script>
+/* ===========================================
+   KONTROLER PREZENTACJI
+   - nawigacja klawiaturą, touch, scroll
+   - kropki, pasek postępu
+   - wyzwalanie animacji przez IntersectionObserver
+   =========================================== */
+class PrezentacjaProcam {
+    constructor() {
+        this.slides = Array.from(document.querySelectorAll('.slide'));
+        this.currentIndex = 0;
+        this.progress = document.getElementById('progress');
+        this.navContainer = document.getElementById('navDots');
+        this.touchStartY = 0;
+
+        this.buildNavDots();
+        this.setupObserver();
+        this.bindKeyboard();
+        this.bindTouch();
+        this.updateProgress();
+    }
+
+    // Tworzenie kropek nawigacji
+    buildNavDots() {
+        this.slides.forEach((slide, i) => {
+            const dot = document.createElement('button');
+            dot.className = 'nav-dot';
+            dot.setAttribute('aria-label', `Slajd ${i + 1}: ${slide.dataset.title || ''}`);
+            dot.addEventListener('click', () => this.goTo(i));
+            this.navContainer.appendChild(dot);
+        });
+        this.dots = Array.from(this.navContainer.querySelectorAll('.nav-dot'));
+        if (this.dots[0]) this.dots[0].classList.add('active');
+    }
+
+    // Obserwator wejścia slajdów do viewport - wyzwala animacje
+    setupObserver() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+                    entry.target.classList.add('visible');
+                    const idx = this.slides.indexOf(entry.target);
+                    if (idx !== -1) {
+                        this.currentIndex = idx;
+                        this.updateDots();
+                        this.updateProgress();
+                    }
+                }
+            });
+        }, { threshold: [0.5] });
+        this.slides.forEach(s => observer.observe(s));
+    }
+
+    // Aktualizacja kropek
+    updateDots() {
+        this.dots.forEach((d, i) => d.classList.toggle('active', i === this.currentIndex));
+    }
+
+    // Pasek postępu
+    updateProgress() {
+        const pct = ((this.currentIndex + 1) / this.slides.length) * 100;
+        this.progress.style.width = pct + '%';
+    }
+
+    // Nawigacja
+    goTo(index) {
+        if (index < 0 || index >= this.slides.length) return;
+        this.slides[index].scrollIntoView({ behavior: 'smooth' });
+    }
+    next() { this.goTo(this.currentIndex + 1); }
+    prev() { this.goTo(this.currentIndex - 1); }
+
+    // Klawisze
+    bindKeyboard() {
+        document.addEventListener('keydown', (e) => {
+            if (['ArrowDown', 'ArrowRight', ' ', 'PageDown'].includes(e.key)) {
+                e.preventDefault(); this.next();
+            } else if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) {
+                e.preventDefault(); this.prev();
+            } else if (e.key === 'Home') {
+                e.preventDefault(); this.goTo(0);
+            } else if (e.key === 'End') {
+                e.preventDefault(); this.goTo(this.slides.length - 1);
+            }
+        });
+    }
+
+    // Touch - swipe pionowy
+    bindTouch() {
+        document.addEventListener('touchstart', (e) => {
+            this.touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+        document.addEventListener('touchend', (e) => {
+            const diff = this.touchStartY - e.changedTouches[0].clientY;
+            if (Math.abs(diff) > 60) { diff > 0 ? this.next() : this.prev(); }
+        }, { passive: true });
+    }
+}
+
+// Start
+document.addEventListener('DOMContentLoaded', () => new PrezentacjaProcam());
+// Pierwsze wyzwolenie animacji na pierwszym slajdzie
+window.addEventListener('load', () => {
+    document.querySelector('.slide').classList.add('visible');
+});
+</script>
+</body>
+</html>
